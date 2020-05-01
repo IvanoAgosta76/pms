@@ -152,7 +152,8 @@ public class ActivityController {
 	@GetMapping(path = "/activity/deleteall/{id}")
 	public String deleteAllActivities(Model model, @PathVariable("id") Long id) throws RecordNotFoundException {
 		
-		activityRepository.deleteAll();
+		List<Activity> activities = activityRepository.findByProject(projectRepository.findById(id).orElse(new Project()));
+		activityRepository.deleteAll(activities);
 		
 		return "redirect:/pms/activities/" + id;
 	}

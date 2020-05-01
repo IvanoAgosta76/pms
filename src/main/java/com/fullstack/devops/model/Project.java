@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name="project")
 public class Project {
@@ -42,6 +45,7 @@ public class Project {
 	private User user;
 	
 	@OneToMany(mappedBy="project")
+	@Cascade(CascadeType.DELETE)
     Set<Activity> activities;
 	
 	@Column(name="description")
