@@ -13,4 +13,4 @@ Install
 3. mvnw package (execute on pom.xml folder)
 4. mvnw spring-boot:run
 
-URL: http://localhost:8000/pms
+URL: http://localhost:8080/pms
