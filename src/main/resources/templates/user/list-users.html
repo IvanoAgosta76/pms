@@ -36,20 +36,19 @@
 						</a>
 					</div>
 					<br>
-					<div th:switch="${message}" class="col-md-10">
+					<div th:switch="${message}" class="col-md-20">
 						<div th:case="null" />
 						<div th:case="*">
 							<h5 th:text="${message}"></h2>
 						</div>
 					</div>
 					<br>
-					<div th:switch="${users}" class="col-md-10">
+					<div th:switch="${users}" class="col-md-20">
 						<h2 th:case="null">No record found !!</h2>
 						<div th:case="*">
 							<table class="table table-striped table-responsive-md table-bordered">
 								<thead>
 									<tr>
-										<th>Id</th>
 										<th>First Name</th>
 										<th>Last Name</th>
 										<th>Email</th>
@@ -58,8 +57,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="user : ${users}">
-										<td th:text="${user.id}"></td>
+									<tr th:each="user : ${users}" th:id="*{user.id}">
 										<td th:text="${user.firstname}"></td>
 										<td th:text="${user.lastname}"></td>
 										<td th:text="${user.email}"></td>

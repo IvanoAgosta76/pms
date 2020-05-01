@@ -32,7 +32,7 @@
 								<label for="name" class="col-form-label">Project Manager</label>
 								<select th:field="*{user}" class="form-control">
 									<option value="">Choose..</option>
-									<option th:each="user: ${users}" th:value="${user.id}" th:text="|${user.firstname} ${user.lastname}|" />
+									<option th:each="user: ${users}" th:value="${user.id}" th:text="|${user.firstname} ${user.lastname}|" th:selected="(${user.id} == *{user.id})">/>
 								</select>
 							</div>
 

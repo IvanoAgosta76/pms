@@ -1,9 +1,9 @@
 package com.fullstack.devops.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -65,8 +65,8 @@ public class ProjectController {
 		/**
 		 *  Set start and end date to current date
 		 */
-		project.setStartDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
-		project.setEndDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+		project.setStartDate(new Date(Calendar.getInstance().getTime().getTime()));
+		project.setEndDate(new Date(Calendar.getInstance().getTime().getTime()));
 		
 		// Add attribures
 		model.addAttribute("project", project);
@@ -102,7 +102,7 @@ public class ProjectController {
 	@GetMapping(path = { "/project/update/{id}" })
 	public String editProjectById(Model model, @PathVariable("id") Long id) throws RecordNotFoundException {
 		
-		Optional<Project> project = projectRepository.findById(id);
+		Project project = projectRepository.findById(id).get();
 		model.addAttribute("project", project);
 		model.addAttribute("users", userRepository.findAll());
 		
@@ -116,10 +116,11 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping(path = "/project/update")
-	public String updateProject(@Valid Project project, BindingResult bindingResult) {
+	public String updateProject(Model model, @Valid Project project, BindingResult bindingResult) {
 		
 		if (bindingResult.hasErrors()) {
-			return "/project/add-project";
+			model.addAttribute("users", userRepository.findAll());
+			return "/project/update-project";
 		}
 		project = projectRepository.save(project);
 		

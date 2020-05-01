@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="activity")
@@ -27,9 +30,13 @@ public class Activity {
 	
 	@Column(name = "worked_hours")
 	@NotNull
+	@Max(24)
+	@Min(0)
 	private int workedHours;
 	
 	@Column(name="description")
+	@NotNull
+	@Size(min=2, max=100)
 	private String description;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
