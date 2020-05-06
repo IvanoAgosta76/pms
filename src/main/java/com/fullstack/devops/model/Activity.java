@@ -16,6 +16,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fullstack.devops.constraint.WorkedHoursConstraint;
+
 @Entity
 @Table(name="activity")
 public class Activity {
@@ -32,6 +34,7 @@ public class Activity {
 	@NotNull
 	@Max(24)
 	@Min(0)
+	@WorkedHoursConstraint
 	private int workedHours;
 	
 	@Column(name="description")
