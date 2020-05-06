@@ -26,21 +26,21 @@
 				<div>
 					<div class="card bg-primary">
 						<div class="card-body text-center">
-							<h6 class="card-text text-white">Project Management System - V1</h6>
+							<h6 class="card-text text-white" th:text="#{project.title}"></h6>
 						</div>
 					</div>
 					<br>
 					<div>
 						<a href="/pms/projects" class="btn btn-success">
-							<i class="fas fa-home ml-2"> Projects </i>
+							<i class="fas fa-home ml-2" th:text="' ' + #{projects}"></i>
 						</a>
 						<a th:href="@{/pms/activity/add/{projectId}(projectId=${id})}" class="btn btn-success">
-							<i class="fas fa-user-plus ml-2"> Add Activity </i>
+							<i class="fas fa-user-plus ml-2" th:text="' ' + #{activity.add}"></i>
 						</a>
 						<a th:href="@{/pms/activity/deleteall/{projectId}(projectId=${id})}" class="btn btn-danger">
 							<i class="fas fa-user-alt-slash ml-2"></i>
 							<i class="fas fa-user-alt-slash ml-2"></i>
-							<i class="fas fa-user-alt-slash ml-2"> Delete All Activities </i>
+							<i class="fas fa-user-alt-slash ml-2" th:text="' ' + #{activity.delete.all}"></i>
 						</a>
 					</div>
 					<br>
@@ -76,13 +76,13 @@
 									</tr>
 								</tbody>
 								<tfoot>
-								<tr>
-									<td></td>
-									<th>Total Worked Hours:</th>
-									<th th:text="${totWorkedHours}">Total</th>
-									<td></td>
-									<td></td>
-								</tr>
+									<tr>
+										<td></td>
+										<th>Total Worked Hours:</th>
+										<th th:text="${totWorkedHours}">Total</th>
+										<td></td>
+										<td></td>
+									</tr>
 								</tfoot>
 							</table>
 						</div>
