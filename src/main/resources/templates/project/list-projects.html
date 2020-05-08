@@ -17,6 +17,7 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="/js/datatable.js"></script>
+<script src="/js/utilities.js"></script>
 </head>
 
 <body>
@@ -32,15 +33,15 @@
 					<br>
 					<div>
 						<a href="/pms/" class="btn btn-success">
-							<i class="fas fa-home ml-2"> Home </i>
+							<i class="fas fa-home ml-2" th:text="' ' + #{home} + ' '"></i>
 						</a>
 						<a href="/pms/project/add" class="btn btn-success">
-							<i class="fas fa-file-medical ml-2"> Add Project </i>
+							<i class="fas fa-file-medical ml-2" th:text="' ' + #{project.add} + ' '"></i>
 						</a>
 						<a href="/pms/project/deleteall" class="btn btn-danger">
 							<i class="fas fa-user-alt-slash ml-2"></i>
 							<i class="fas fa-user-alt-slash ml-2"></i>
-							<i class="fas fa-user-alt-slash ml-2"> Delete All Projects </i>
+							<i class="fas fa-user-alt-slash ml-2" th:text="' ' + #{project.delete.all} + ' '"></i>
 						</a>
 					</div>
 					<br>
@@ -50,14 +51,14 @@
 							<table class="table table-striped table-responsive-md table-bordered" id="export-template">
 								<thead>
 									<tr>
-										<th>Project Name</th>
-										<th>Project Manager</th>
-										<th>Start Date</th>
-										<th>End Date</th>
-										<th>Description</th>
-										<th>Update</th>
-										<th>Activities</th>
-										<th>Delete</th>
+										<th th:text="#{project.name}"></th>
+										<th th:text="#{project.manager}"></th>
+										<th th:text="#{startDate}"></th>
+										<th th:text="#{endDate}"></th>
+										<th th:text="#{description}"></th>
+										<th th:text="#{update}"></th>
+										<th th:text="#{activities}"></th>
+										<th th:text="#{delete}"></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -89,13 +90,16 @@
 						</div>
 					</div>
 				</div>
+				<br>
+				<div th:replace="fragments/footer :: footer"></div>
 			</div>
 		</div>
 	</div>
-	
 	<script type="text/javascript">
 		// Transform to data table
-		transformTableToDataTable('export-template');
+		$(document).ready(function() {
+			createDatatable('export-template');
+		});
 	</script>
 </body>
 

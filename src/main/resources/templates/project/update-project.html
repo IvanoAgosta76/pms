@@ -23,40 +23,40 @@
 							<input type="hidden" th:field="*{id}" class="form-control" id="id" />
 
 							<div class="form-group col-md-8">
-								<label for="name" class="col-form-label">Project Name</label>
+								<label for="name" class="col-form-label" th:text="#{project.name}"></label>
 								<input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Project Name" />
-								<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="col-form-label red-text">Project Name Error</label>
+								<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="col-form-label red-text"></label>
 							</div>
 
 							<div class="form-group col-md-8">
-								<label for="name" class="col-form-label">Project Manager</label>
+								<label for="name" class="col-form-label" th:text="#{project.manager}"></label>
 								<select th:field="*{user}" class="form-control">
-									<option value="">Choose..</option>
+									<option value="" th:text="#{project.manager.choose}"></option>
 									<option th:each="user: ${users}" th:value="${user.id}" th:text="|${user.firstname} ${user.lastname}|" th:selected="(${user.id} == *{user.id})">/>
 								</select>
 							</div>
 
 							<div class="form-group col-md-8">
-								<label for="description" class="col-form-label">Description</label>
+								<label for="description" class="col-form-label" th:text="#{description}"></label>
 								<input type="text" th:field="*{description}" class="form-control" id="description" placeholder="Description" />
 							</div>
 
 							<div class="form-group col-md-8">
-								<label class="col-xs-2">Start Date</label>
+								<label class="col-xs-2" th:text="#{startDate}"></label>
 								<input type="date" class="form-control" th:field="*{startDate}" placeholder="Start Date" />
-								<label th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="col-form-label red-text">Start Date Error</label>
+								<label th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="col-form-label red-text"></label>
 							</div>
 
 							<div class="form-group col-md-8">
-								<label class="col-xs-2">End Date</label>
+								<label class="col-xs-2" th:text="#{endDate}"></label>
 								<input type="date" class="form-control" th:field="*{endDate}" placeholder="End Date" />
-								<label th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="col-form-label red-text">End Date Error</label>
+								<label th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="col-form-label red-text"></label>
 							</div>
 
 							<div class="col-md-6">
-								<input type="submit" class="btn btn-primary" value=" Submit ">
+								<input type="submit" class="btn btn-primary" th:value="' ' + #{submit} + ' '">
 								<a href="/pms/projects" class="btn btn-danger">
-									<i class="fas fa-home"> Cancel </i>
+									<i class="fas fa-home" th:text="' ' + #{cancel} + ' '"></i>
 								</a>
 							</div>
 
@@ -67,5 +67,4 @@
 		</div>
 	</div>
 </body>
-
 </html>

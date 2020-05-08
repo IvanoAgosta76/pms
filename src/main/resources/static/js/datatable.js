@@ -1,4 +1,4 @@
-function transformTableToDataTable(id) {
+function createDatatable(id) {
 	// Transform template in DataTable
 	var table = $('#' + id).DataTable({
 		dom : 'B<"toolbar">lfrtip',
