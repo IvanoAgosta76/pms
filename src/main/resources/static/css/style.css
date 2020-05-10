@@ -21,3 +21,8 @@ body {
   margin-right: auto;
   width: 50%;
 }
+
+.chartContainer {
+	height: 370px; 
+	width: 100%;
+}

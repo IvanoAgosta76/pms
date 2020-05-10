@@ -6,36 +6,60 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fullstack.devops.exception.RecordNotFoundException;
 import com.fullstack.devops.model.Project;
+import com.fullstack.devops.model.ProjectProperties;
 import com.fullstack.devops.repository.ProjectRepository;
 import com.fullstack.devops.repository.UserRepository;
+import com.fullstack.devops.validator.ProjectValidator;
 
 @Controller
 @RequestMapping("/pms")
 public class ProjectController {
 
 	@Autowired
+	private Environment environment;
+	
+	@Autowired
 	ProjectRepository projectRepository;
 
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired
+	private ProjectValidator validator;
+	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	
+	private ProjectProperties projectProperties;
+	
+	@PostConstruct
+    public void init(){
+		projectProperties = new ProjectProperties(Integer.valueOf(environment.getProperty("pms.workHoursForDay")));
+	}
+	
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		binder.addValidators(validator);
+	}
+	
 	/**
 	 * Show All project
 	 * @param model
@@ -62,6 +86,7 @@ public class ProjectController {
 	public String addProject(Model model) {
 		
 		Project project = new Project();
+		
 		/**
 		 *  Set start and end date to current date
 		 */
@@ -70,6 +95,7 @@ public class ProjectController {
 		
 		// Add attribures
 		model.addAttribute("project", project);
+		model.addAttribute("projectProperties", projectProperties);
 		model.addAttribute("users", userRepository.findAll());
 		
 		return "project/add-project";
@@ -82,9 +108,11 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping(path = "/project/create")
-	public String createProject(@Valid Project project, BindingResult bindingResult) {
+	public String createProject(Model model, @Valid Project project, BindingResult bindingResult) {
 		
 		if (bindingResult.hasErrors()) {
+			model.addAttribute("users", userRepository.findAll());
+			model.addAttribute("projectProperties", projectProperties);
 			return "/project/add-project";
 		}
 		project = projectRepository.save(project);
@@ -105,6 +133,7 @@ public class ProjectController {
 		Project project = projectRepository.findById(id).get();
 		model.addAttribute("project", project);
 		model.addAttribute("users", userRepository.findAll());
+		model.addAttribute("projectProperties", projectProperties);
 		
 		return "project/update-project";
 	}
@@ -120,6 +149,7 @@ public class ProjectController {
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("users", userRepository.findAll());
+			model.addAttribute("projectProperties", projectProperties);
 			return "/project/update-project";
 		}
 		project = projectRepository.save(project);

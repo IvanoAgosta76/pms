@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -42,6 +43,7 @@ public class Project {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_user")
+	@NotNull
 	private User user;
 	
 	@OneToMany(mappedBy="project")
@@ -51,6 +53,18 @@ public class Project {
 	@Column(name="description")
 	private String description;
 	
+	@Column(name="plannedHours")
+	@Min(0)
+	private int plannedHours = 0;
+	
+	public int getPlannedHours() {
+		return plannedHours;
+	}
+
+	public void setPlannedHours(int plannedHours) {
+		this.plannedHours = plannedHours;
+	}
+
 	public Set<Activity> getActivities() {
 		return activities;
 	}

@@ -15,8 +15,10 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="/js/datatable.js"></script>
 <script src="/js/utilities.js"></script>
+<script src="/js/paretoChart.js"></script>
 </head>
 
 <body>
@@ -31,19 +33,38 @@
 					</div>
 					<br>
 					<div>
-						<a href="/pms/projects" class="btn btn-success">
+						<a href="/pms/projects" class="btn btn-success"> 
 							<i class="fas fa-home ml-2" th:text="' ' + #{projects}"></i>
-						</a>
-						<a th:href="@{/pms/activity/add/{projectId}(projectId=${id})}" class="btn btn-success">
+						</a> 
+						<a th:href="@{/pms/activity/add/{projectId}(projectId=${id})}" class="btn btn-success"> 
 							<i class="fas fa-user-plus ml-2" th:text="' ' + #{activity.add}"></i>
-						</a>
-						<a th:href="@{/pms/activity/deleteall/{projectId}(projectId=${id})}" class="btn btn-danger">
-							<i class="fas fa-user-alt-slash ml-2"></i>
-							<i class="fas fa-user-alt-slash ml-2"></i>
+						</a> 
+						<a th:href="@{/pms/activity/deleteall/{projectId}(projectId=${id})}" class="btn btn-danger"> 
+							<i class="fas fa-user-alt-slash ml-2"></i> 
+							<i class="fas fa-user-alt-slash ml-2"></i> 
 							<i class="fas fa-user-alt-slash ml-2" th:text="' ' + #{activity.delete.all}"></i>
 						</a>
 					</div>
 					<br>
+					<hr>
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<p>
+									<span>[[#{plannedHours}]] : <strong>[[${activities.isEmpty()?'0':activities[0].project.plannedHours}]]</strong></span>
+								</p>
+								<p>
+									<span>[[#{workedHours}]] : <strong>[[${totWorkedHours}]]</strong></span>
+								</p>
+							</div>
+							<div class="col text-center align-self-center bg-success" id="percentage"> 
+								<span>[[#{progress}]] : <strong id="percentage-content"></strong></span>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div id="chartContainer" class="chartContainer"></div>
+					<hr>
 					<div th:switch="${activities}" class="col-md-20">
 						<h2 th:case="null">No record found !!</h2>
 						<div th:case="*">
@@ -63,16 +84,10 @@
 										<td th:text="${#dates.format(activity.date,'dd-MM-yyyy')}"></td>
 										<td th:text="${activity.workedHours}"></td>
 
-										<td>
-											<a th:href="@{/pms/activity/update/{id}(id=${activity.id})}" class="btn btn-info">
-												<i class="fas fa-user-edit ml-2"></i>
-											</a>
-										</td>
-										<td>
-											<a th:href="@{/pms/activity/delete/{id}(id=${activity.id})}" class="btn btn-danger">
-												<i class="fas fa-user-alt-slash ml-2"></i>
-											</a>
-										</td>
+										<td><a th:href="@{/pms/activity/update/{id}(id=${activity.id})}" class="btn btn-info"> <i class="fas fa-user-edit ml-2"></i>
+										</a></td>
+										<td><a th:href="@{/pms/activity/delete/{id}(id=${activity.id})}" class="btn btn-danger"> <i class="fas fa-user-alt-slash ml-2"></i>
+										</a></td>
 									</tr>
 								</tbody>
 								<tfoot>
@@ -94,8 +109,31 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+	<script th:inline="javascript">
 		$(document).ready(function() {
+			var planned = [[${activities.isEmpty()? 0 : activities[0].project.plannedHours}]];
+			var percentage = [[${activities.isEmpty()? 0 : ( totWorkedHours * 100 ) / activities[0].project.plannedHours }]];	
+			
+			// Set progress percentage
+			$("#percentage-content").text(percentage + '%');
+			
+			// Set bachground color (<=100% green, 100<%<120% yellow, >=120% red)
+			if( percentage > 100) {
+				$("#percentage").removeClass("bg-success");
+				if( percentage < 120)
+					$("#percentage").addClass("bg-warning");
+				else
+					$("#percentage").addClass("bg-danger");
+			}
+			
+			// Chart
+			var points = [];
+			/*[# th:each="activity : ${activities}"]*/
+			points.push(JSON.parse('{"label": "[(${activity.description})]", "y":[(${activity.workedHours})] }'));
+			/*[/]*/
+			showParetoChart(points, planned);
+	
+			// Datatable
 			createDatatable('export-template');
 		});
 	</script>
