@@ -127,15 +127,22 @@ public class UserController {
 	 */
 	@GetMapping(path = "/user/delete/{id}")
 	public String deleteUserById(Model model, @PathVariable("id") Long id) throws RecordNotFoundException {
+		List<Project> linkedProjects;
 		
-		User user = userRepository.findById(id).get();
-		List<Project> linkedProjects = projectService.getProjectsByUser(user);
-
-		if (!linkedProjects.isEmpty()) {
+		Optional<User> opt = userRepository.findById(id);
+		if( !opt.isPresent() ) {
 			model.addAttribute("users", userService.getAllUsers());
-			model.addAttribute("message", user.getFirstname() + " " + user.getLastname() + " delete not allowed due to the linked projects [" + linkedProjects.stream().map(Project::getName).collect(Collectors.joining(", ")) + "]");
+			model.addAttribute("message", "User does not exist!");
 			return "user/list-users";
 		}
+		
+		linkedProjects = projectService.getProjectsByUser(opt.get());
+		if (!linkedProjects.isEmpty()) {
+			model.addAttribute("users", userService.getAllUsers());
+			model.addAttribute("message", opt.get().getFirstname() + " " + opt.get().getLastname() + " delete not allowed due to the linked projects [" + linkedProjects.stream().map(Project::getName).collect(Collectors.joining(", ")) + "]");
+			return "user/list-users";
+		}
+		
 		userRepository.deleteById(id);
 		return "redirect:/pms/users";
 	}
